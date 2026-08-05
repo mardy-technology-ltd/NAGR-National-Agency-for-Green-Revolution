@@ -62,11 +62,6 @@ export default function HeroSlider() {
               >
                 <ShieldCheck className="w-4 h-4 text-emerald-400" />
                 <span>{slide.badge}</span>
-                {isPaused && (
-                  <span className="ml-2 flex items-center text-[10px] font-mono text-amber-400 bg-amber-950/60 px-2 py-0.5 rounded-full border border-amber-500/40">
-                    <Pause className="w-3 h-3 mr-1" /> Paused
-                  </span>
-                )}
               </motion.div>
 
               {/* Headline */}
