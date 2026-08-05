@@ -11,9 +11,9 @@ export default function TestimonialsSection() {
   useEffect(() => {
     const timer = setInterval(() => {
       setIndex((prev) => (prev + 1) % partnerTestimonials.length);
-    }, 7000);
+    }, 6000);
     return () => clearInterval(timer);
-  }, []);
+  }, [index]);
 
   const nextSlide = () => setIndex((prev) => (prev + 1) % partnerTestimonials.length);
   const prevSlide = () => setIndex((prev) => (prev - 1 + partnerTestimonials.length) % partnerTestimonials.length);
@@ -72,7 +72,7 @@ export default function TestimonialsSection() {
           <div className="flex items-center justify-center space-x-4 mt-8">
             <button
               onClick={prevSlide}
-              className="p-3 rounded-full bg-emerald-950 border border-emerald-800/50 text-emerald-300 hover:text-white hover:bg-emerald-800 transition-colors"
+              className="p-3 rounded-full bg-emerald-950 border border-emerald-800/50 text-emerald-300 hover:text-white hover:bg-emerald-800 transition-colors cursor-pointer"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
@@ -82,7 +82,7 @@ export default function TestimonialsSection() {
                 <button
                   key={idx}
                   onClick={() => setIndex(idx)}
-                  className={`h-2.5 rounded-full transition-all duration-300 ${
+                  className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
                     idx === index ? 'w-8 bg-emerald-400' : 'w-2.5 bg-emerald-900'
                   }`}
                 />
@@ -91,7 +91,7 @@ export default function TestimonialsSection() {
 
             <button
               onClick={nextSlide}
-              className="p-3 rounded-full bg-emerald-950 border border-emerald-800/50 text-emerald-300 hover:text-white hover:bg-emerald-800 transition-colors"
+              className="p-3 rounded-full bg-emerald-950 border border-emerald-800/50 text-emerald-300 hover:text-white hover:bg-emerald-800 transition-colors cursor-pointer"
             >
               <ChevronRight className="w-5 h-5" />
             </button>

@@ -3,20 +3,18 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight, ArrowRight, ShieldCheck, Pause } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ArrowRight, ShieldCheck } from 'lucide-react';
 import { heroSlides } from '@/data/mockData';
 
 export default function HeroSlider() {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
-    if (isPaused) return;
     const timer = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % heroSlides.length);
-    }, 6000);
+    }, 5000);
     return () => clearInterval(timer);
-  }, [isPaused]);
+  }, [currentIndex]);
 
   const nextSlide = () => setCurrentIndex((prev) => (prev + 1) % heroSlides.length);
   const prevSlide = () => setCurrentIndex((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
@@ -24,28 +22,24 @@ export default function HeroSlider() {
   const slide = heroSlides[currentIndex];
 
   return (
-    <section
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
-      className="relative w-full h-[620px] md:h-[700px] overflow-hidden bg-[#050b06]"
-    >
+    <section className="relative w-full h-[620px] md:h-[700px] overflow-hidden bg-[#050b06]">
       <AnimatePresence mode="wait">
         <motion.div
           key={slide.id}
-          initial={{ opacity: 0, scale: 1.05 }}
+          initial={{ opacity: 0, scale: 1.04 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.8, ease: 'easeOut' }}
+          transition={{ duration: 0.7, ease: 'easeOut' }}
           className="absolute inset-0 w-full h-full"
         >
-          {/* Real Image Tag */}
+          {/* Background Image */}
           <img
             src={slide.image}
             alt={slide.title}
             className="absolute inset-0 w-full h-full object-cover object-center"
           />
 
-          {/* Balanced Dark Emerald Gradient Overlays */}
+          {/* Overlays */}
           <div className="absolute inset-0 bg-gradient-to-r from-[#040905]/95 via-[#040905]/70 to-black/30" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#070e08] via-transparent to-black/40" />
 
@@ -53,11 +47,11 @@ export default function HeroSlider() {
           <div className="relative max-w-[1440px] mx-auto h-full px-4 md:px-8 flex items-center">
             <div className="max-w-3xl text-left space-y-6">
               
-              {/* Badge & Pause Indicator */}
+              {/* Badge */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2, duration: 0.5 }}
+                transition={{ delay: 0.15, duration: 0.4 }}
                 className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 text-xs font-semibold backdrop-blur-md"
               >
                 <ShieldCheck className="w-4 h-4 text-emerald-400" />
@@ -68,7 +62,7 @@ export default function HeroSlider() {
               <motion.h1
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3, duration: 0.5 }}
+                transition={{ delay: 0.25, duration: 0.5 }}
                 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white leading-tight tracking-tight drop-shadow-md"
               >
                 {slide.title}
@@ -78,7 +72,7 @@ export default function HeroSlider() {
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4, duration: 0.5 }}
+                transition={{ delay: 0.35, duration: 0.5 }}
                 className="text-emerald-100/90 text-sm sm:text-lg leading-relaxed font-normal"
               >
                 {slide.subtitle}
@@ -88,7 +82,7 @@ export default function HeroSlider() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5, duration: 0.5 }}
+                transition={{ delay: 0.45, duration: 0.5 }}
                 className="flex flex-wrap gap-4 pt-2"
               >
                 <Link
@@ -115,13 +109,13 @@ export default function HeroSlider() {
       <div className="absolute bottom-8 right-8 z-20 flex items-center space-x-3">
         <button
           onClick={prevSlide}
-          className="p-3 rounded-full bg-emerald-950/70 border border-emerald-800/50 text-emerald-300 hover:text-white hover:bg-emerald-800/80 transition-all backdrop-blur-md"
+          className="p-3 rounded-full bg-emerald-950/70 border border-emerald-800/50 text-emerald-300 hover:text-white hover:bg-emerald-800/80 transition-all backdrop-blur-md cursor-pointer"
         >
           <ChevronLeft className="w-5 h-5" />
         </button>
         <button
           onClick={nextSlide}
-          className="p-3 rounded-full bg-emerald-950/70 border border-emerald-800/50 text-emerald-300 hover:text-white hover:bg-emerald-800/80 transition-all backdrop-blur-md"
+          className="p-3 rounded-full bg-emerald-950/70 border border-emerald-800/50 text-emerald-300 hover:text-white hover:bg-emerald-800/80 transition-all backdrop-blur-md cursor-pointer"
         >
           <ChevronRight className="w-5 h-5" />
         </button>
@@ -133,7 +127,7 @@ export default function HeroSlider() {
           <button
             key={idx}
             onClick={() => setCurrentIndex(idx)}
-            className={`h-2 rounded-full transition-all duration-300 ${
+            className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
               idx === currentIndex ? 'w-8 bg-emerald-400' : 'w-2 bg-emerald-900/80'
             }`}
           />
