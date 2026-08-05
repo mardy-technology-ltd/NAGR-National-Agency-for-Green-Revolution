@@ -8,13 +8,15 @@ import { heroSlides } from '@/data/mockData';
 
 export default function HeroSlider() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
+    if (isPaused) return;
     const timer = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % heroSlides.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, [currentIndex]);
+  }, [currentIndex, isPaused]);
 
   const nextSlide = () => setCurrentIndex((prev) => (prev + 1) % heroSlides.length);
   const prevSlide = () => setCurrentIndex((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
@@ -78,11 +80,13 @@ export default function HeroSlider() {
                 {slide.subtitle}
               </motion.p>
 
-              {/* Action Buttons */}
+              {/* Action Buttons with Button-Specific Pause-on-Hover */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.45, duration: 0.5 }}
+                onMouseEnter={() => setIsPaused(true)}
+                onMouseLeave={() => setIsPaused(false)}
                 className="flex flex-wrap gap-4 pt-2"
               >
                 <Link
@@ -105,8 +109,12 @@ export default function HeroSlider() {
         </motion.div>
       </AnimatePresence>
 
-      {/* Slide Navigation Controls */}
-      <div className="absolute bottom-8 right-8 z-20 flex items-center space-x-3">
+      {/* Slide Navigation Controls with Pause-on-Hover */}
+      <div
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+        className="absolute bottom-8 right-8 z-20 flex items-center space-x-3"
+      >
         <button
           onClick={prevSlide}
           className="p-3 rounded-full bg-emerald-950/70 border border-emerald-800/50 text-emerald-300 hover:text-white hover:bg-emerald-800/80 transition-all backdrop-blur-md cursor-pointer"
@@ -121,8 +129,12 @@ export default function HeroSlider() {
         </button>
       </div>
 
-      {/* Progress Dots */}
-      <div className="absolute bottom-8 left-8 z-20 flex space-x-2">
+      {/* Progress Dots with Pause-on-Hover */}
+      <div
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+        className="absolute bottom-8 left-8 z-20 flex space-x-2"
+      >
         {heroSlides.map((_, idx) => (
           <button
             key={idx}
