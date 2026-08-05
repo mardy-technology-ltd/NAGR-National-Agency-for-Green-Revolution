@@ -387,7 +387,7 @@ export const projectsData = [
     title: "Deep Tube-well & Rural Hygiene Sanitation Program",
     category: "Health",
     desc: "Installing deep tube-wells for clean drinking water and building hygienic latrines across 148 rural villages in Northern Bangladesh since 2008.",
-    image: "https://images.unsplash.com/photo-1541888946425-d0fbb186a5b7?q=80&w=800&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1581244277943-fe4a9c777189?w=800&auto=format&fit=crop",
     location: "Gaibandha & Naogaon",
     beneficiaries: "148 Villages",
     subProgram: "Partner: New Start in East Norway"
@@ -397,7 +397,7 @@ export const projectsData = [
     title: "Women Handicraft Project & Community Micro-Savings",
     category: "Economic",
     desc: "Empowering 5,500 rural women through indigenous handicraft workshops, self-help savings groups, micro-enterprises, and financial literacy training.",
-    image: "https://images.unsplash.com/photo-1556742049-0a67daf64f22?q=80&w=800&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1606041008023-472dfb5e530f?w=800&auto=format&fit=crop",
     location: "6 Working Districts",
     beneficiaries: "5,500 Women",
     subProgram: "Handicrafts & Savings Groups"

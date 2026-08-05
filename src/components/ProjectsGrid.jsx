@@ -3,17 +3,24 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MapPin, Users, ArrowUpRight } from 'lucide-react';
+import { MapPin, Users, ArrowUpRight, Sparkles } from 'lucide-react';
 import { projectsData } from '@/data/mockData';
+
+const DEFAULT_FALLBACK_IMAGE = "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=800";
 
 export default function ProjectsGrid() {
   const [filter, setFilter] = useState('All');
+  const [failedImages, setFailedImages] = useState({});
 
   const categories = ['All', 'Development', 'Education', 'Health', 'Economic'];
 
   const filteredProjects = filter === 'All'
     ? projectsData
     : projectsData.filter((p) => p.category === filter);
+
+  const handleImageError = (id) => {
+    setFailedImages((prev) => ({ ...prev, [id]: true }));
+  };
 
   return (
     <section id="projects" className="py-20 bg-[#070e08] relative">
@@ -65,11 +72,12 @@ export default function ProjectsGrid() {
                 className="glass-card glass-card-hover rounded-2xl overflow-hidden flex flex-col justify-between border border-emerald-900/40 group"
               >
                 <Link href={`/projects/${proj.id}`}>
-                  {/* Card Image */}
-                  <div className="relative h-52 overflow-hidden">
+                  {/* Card Image with Fallback Logic */}
+                  <div className="relative h-52 overflow-hidden bg-gradient-to-br from-emerald-950 via-[#0a1c0e] to-zinc-950 flex items-center justify-center">
                     <img
-                      src={proj.image}
+                      src={failedImages[proj.id] ? DEFAULT_FALLBACK_IMAGE : proj.image}
                       alt={proj.title}
+                      onError={() => handleImageError(proj.id)}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                     <div className="absolute top-3 left-3">
