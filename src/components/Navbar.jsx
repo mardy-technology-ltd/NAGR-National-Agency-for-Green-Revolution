@@ -74,12 +74,22 @@ export default function Navbar() {
     }
   };
 
+  const toggleDropdown = (id, e) => {
+    e.preventDefault();
+    setActiveDropdown(activeDropdown === id ? null : id);
+  };
+
+  const toggleNested = (id, e) => {
+    e.preventDefault();
+    setActiveNested(activeNested === id ? null : id);
+  };
+
   return (
     <header className="sticky top-0 z-40 w-full glass-nav transition-all duration-300">
       <div className="max-w-[1440px] mx-auto px-4 md:px-8">
         <div className="flex items-center justify-between h-20">
           
-          {/* Brand Logo (Absolute Left) */}
+          {/* Brand Logo */}
           <Link href="/" className="flex items-center space-x-3 group shrink-0">
             <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-700 flex items-center justify-center shadow-lg shadow-emerald-600/30 group-hover:scale-105 transition-transform">
               <Leaf className="w-6 h-6 text-emerald-950 stroke-[2.5]" />
@@ -94,7 +104,7 @@ export default function Navbar() {
             </div>
           </Link>
 
-          {/* Desktop Navigation with whitespace-nowrap & gap-x-6 */}
+          {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-4 xl:space-x-6 font-medium">
             {navigationMenu.map((item) => (
               <div
@@ -107,13 +117,13 @@ export default function Navbar() {
                 }}
               >
                 {item.submenu ? (
-                  <Link
-                    href={resolveRoute(item.id)}
-                    className="flex items-center space-x-1.5 px-3 py-2 text-sm font-semibold text-emerald-100/90 hover:text-emerald-400 transition-colors rounded-lg group-hover:bg-emerald-950/40 whitespace-nowrap"
+                  <button
+                    onClick={(e) => toggleDropdown(item.id, e)}
+                    className="flex items-center space-x-1.5 px-3 py-2 text-sm font-semibold text-emerald-100/90 hover:text-emerald-400 transition-colors rounded-lg group-hover:bg-emerald-950/40 whitespace-nowrap cursor-pointer"
                   >
                     <span className="whitespace-nowrap">{item.title}</span>
-                    <ChevronDown className="w-4 h-4 text-emerald-400 group-hover:rotate-180 transition-transform duration-200 shrink-0" />
-                  </Link>
+                    <ChevronDown className={`w-4 h-4 text-emerald-400 transition-transform duration-200 shrink-0 ${activeDropdown === item.id ? 'rotate-180' : 'group-hover:rotate-180'}`} />
+                  </button>
                 ) : (
                   <Link
                     href={resolveRoute(item.id)}
@@ -133,16 +143,23 @@ export default function Navbar() {
                           className="relative group/nested"
                           onMouseEnter={() => sub.hasNested && setActiveNested(sub.id)}
                         >
-                          <Link
-                            href={resolveRoute(sub.id)}
-                            onClick={() => { setActiveDropdown(null); setActiveNested(null); }}
-                            className="w-full flex items-center justify-between px-3 py-2.5 text-xs font-medium text-emerald-200 hover:text-emerald-300 hover:bg-emerald-900/40 rounded-lg text-left transition-colors whitespace-nowrap"
-                          >
-                            <span className="whitespace-nowrap">{sub.title}</span>
-                            {sub.hasNested && (
+                          {sub.hasNested ? (
+                            <button
+                              onClick={(e) => toggleNested(sub.id, e)}
+                              className="w-full flex items-center justify-between px-3 py-2.5 text-xs font-medium text-emerald-200 hover:text-emerald-300 hover:bg-emerald-900/40 rounded-lg text-left transition-colors whitespace-nowrap cursor-pointer"
+                            >
+                              <span className="whitespace-nowrap">{sub.title}</span>
                               <ChevronRight className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                            )}
-                          </Link>
+                            </button>
+                          ) : (
+                            <Link
+                              href={resolveRoute(sub.id)}
+                              onClick={() => { setActiveDropdown(null); setActiveNested(null); }}
+                              className="w-full flex items-center justify-between px-3 py-2.5 text-xs font-medium text-emerald-200 hover:text-emerald-300 hover:bg-emerald-900/40 rounded-lg text-left transition-colors whitespace-nowrap"
+                            >
+                              <span className="whitespace-nowrap">{sub.title}</span>
+                            </Link>
+                          )}
 
                           {/* Nested Submenu */}
                           {sub.hasNested && activeNested === sub.id && (
@@ -171,7 +188,7 @@ export default function Navbar() {
             ))}
           </nav>
 
-          {/* Header Action CTA (Absolute Right) */}
+          {/* Header Action CTA */}
           <div className="hidden lg:flex items-center shrink-0">
             <Link
               href="/donate"
@@ -200,33 +217,56 @@ export default function Navbar() {
           <div className="space-y-1">
             {navigationMenu.map((item) => (
               <div key={item.id} className="border-b border-emerald-900/20 pb-2">
-                <Link
-                  href={resolveRoute(item.id)}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="font-semibold text-emerald-200 py-2 px-2 text-sm flex justify-between items-center block whitespace-nowrap"
-                >
-                  <span>{item.title}</span>
-                </Link>
-                {item.submenu && (
+                {item.submenu ? (
+                  <button
+                    onClick={(e) => toggleDropdown(item.id, e)}
+                    className="w-full font-semibold text-emerald-200 py-2.5 px-2 text-sm flex justify-between items-center text-left whitespace-nowrap"
+                  >
+                    <span>{item.title}</span>
+                    <ChevronDown className={`w-4 h-4 text-emerald-400 transition-transform ${activeDropdown === item.id ? 'rotate-180' : ''}`} />
+                  </button>
+                ) : (
+                  <Link
+                    href={resolveRoute(item.id)}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="font-semibold text-emerald-200 py-2.5 px-2 text-sm flex justify-between items-center block whitespace-nowrap"
+                  >
+                    <span>{item.title}</span>
+                  </Link>
+                )}
+
+                {/* Mobile Submenu Dropdown */}
+                {item.submenu && activeDropdown === item.id && (
                   <div className="pl-4 space-y-1 mt-1 border-l-2 border-emerald-800/40">
                     {item.submenu.map((sub) => (
                       <div key={sub.id}>
-                        <Link
-                          href={resolveRoute(sub.id)}
-                          onClick={() => setMobileMenuOpen(false)}
-                          className="w-full text-left py-1.5 px-2 text-xs text-emerald-300 hover:text-white flex justify-between items-center block whitespace-nowrap"
-                        >
-                          <span>{sub.title}</span>
-                          {sub.hasNested && <ChevronDown className="w-3.5 h-3.5 text-emerald-400 shrink-0" />}
-                        </Link>
-                        {sub.nestedItems && (
-                          <div className="pl-3 space-y-1 my-1">
+                        {sub.hasNested ? (
+                          <button
+                            onClick={(e) => toggleNested(sub.id, e)}
+                            className="w-full text-left py-2 px-2 text-xs font-medium text-emerald-300 hover:text-white flex justify-between items-center whitespace-nowrap"
+                          >
+                            <span>{sub.title}</span>
+                            <ChevronDown className={`w-3.5 h-3.5 text-emerald-400 transition-transform ${activeNested === sub.id ? 'rotate-180' : ''}`} />
+                          </button>
+                        ) : (
+                          <Link
+                            href={resolveRoute(sub.id)}
+                            onClick={() => setMobileMenuOpen(false)}
+                            className="w-full text-left py-2 px-2 text-xs text-emerald-300 hover:text-white flex justify-between items-center block whitespace-nowrap"
+                          >
+                            <span>{sub.title}</span>
+                          </Link>
+                        )}
+
+                        {/* Mobile Nested Items */}
+                        {sub.nestedItems && activeNested === sub.id && (
+                          <div className="pl-3 space-y-1 my-1 border-l border-emerald-800/30">
                             {sub.nestedItems.map((n) => (
                               <Link
                                 key={n.id}
                                 href={resolveRoute(n.id)}
                                 onClick={() => setMobileMenuOpen(false)}
-                                className="block w-full text-left py-1 px-2 text-[11px] text-emerald-400/80 hover:text-emerald-200 whitespace-nowrap"
+                                className="block w-full text-left py-1.5 px-2 text-[11px] text-emerald-400/90 hover:text-emerald-100 whitespace-nowrap"
                               >
                                 • {n.title}
                               </Link>
@@ -239,6 +279,7 @@ export default function Navbar() {
                 )}
               </div>
             ))}
+
             <div className="pt-4">
               <Link
                 href="/donate"
