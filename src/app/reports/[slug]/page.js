@@ -7,6 +7,10 @@ import FloatingWhatsApp from '@/components/FloatingWhatsApp';
 import { reportsSubpages } from '@/data/subpageData';
 import { publicationsData, galleryData } from '@/data/mockData';
 
+export async function generateStaticParams() {
+  return Object.keys(reportsSubpages).map((slug) => ({ slug }));
+}
+
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const data = reportsSubpages[slug] || reportsSubpages['annual-report'];
@@ -18,11 +22,16 @@ export async function generateMetadata({ params }) {
 
 export default async function ReportsSubpage({ params }) {
   const { slug } = await params;
-  const pageData = reportsSubpages[slug] || {
-    title: slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
-    subtitle: "Official publication by NAGR Bangladesh.",
-    image: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=1200"
-  };
+  const pageData = reportsSubpages[slug] || reportsSubpages['annual-report'];
+
+  if (!pageData) {
+    return (
+      <main className="min-h-screen bg-[#070e08] text-emerald-50 py-20 text-center">
+        <h1 className="text-2xl font-bold">Report Not Found</h1>
+        <Link href="/reports" className="text-emerald-400 underline mt-4 inline-block">Return to Reports</Link>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-[#070e08] text-emerald-50">

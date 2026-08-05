@@ -1,32 +1,36 @@
 import Link from 'next/link';
-import { ArrowLeft, CheckCircle2, Award, Users, BookOpen, MapPin } from 'lucide-react';
+import { ArrowLeft, CheckCircle2 } from 'lucide-react';
 import TopBar from '@/components/TopBar';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import FloatingWhatsApp from '@/components/FloatingWhatsApp';
 import { whoWeAreSubpages } from '@/data/subpageData';
 
+export async function generateStaticParams() {
+  return Object.keys(whoWeAreSubpages).map((slug) => ({ slug }));
+}
+
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const data = whoWeAreSubpages[slug] || whoWeAreSubpages['intro'];
   return {
     title: `${data.title} | NAGR Bangladesh`,
-    description: data.subtitle,
+    description: data.subtitle || "National Agency for Green Revolution (NAGR) Bangladesh.",
   };
 }
 
 export default async function WhoWeAreSubpage({ params }) {
   const { slug } = await params;
-  const pageData = whoWeAreSubpages[slug] || {
-    title: slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
-    badge: "Who We Are",
-    subtitle: "National Agency for Green Revolution (NAGR) Bangladesh.",
-    image: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=1200",
-    content: [
-      "National Agency for Green Revolution (NAGR) is committed to empowering indigenous Santal and rural communities through mother-tongue education, healthcare, and eco-livelihoods.",
-      "Working across 6 districts in Northern Bangladesh with registered approval from NGO Affairs Bureau Bangladesh (Reg No: 2841)."
-    ]
-  };
+  const pageData = whoWeAreSubpages[slug] || whoWeAreSubpages['intro'];
+
+  if (!pageData) {
+    return (
+      <main className="min-h-screen bg-[#070e08] text-emerald-50 py-20 text-center">
+        <h1 className="text-2xl font-bold">Subpage Not Found</h1>
+        <Link href="/who-we-are" className="text-emerald-400 underline mt-4 inline-block">Return to Overview</Link>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-[#070e08] text-emerald-50">
@@ -98,49 +102,6 @@ export default async function WhoWeAreSubpage({ params }) {
                           <span>{h}</span>
                         </div>
                       ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Optional Members Grid for Executive Committee & Management */}
-                {pageData.members && (
-                  <div className="pt-6 border-t border-emerald-900/40 space-y-4">
-                    <h3 className="text-lg font-bold text-emerald-300">Leadership List:</h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      {pageData.members.map((m, idx) => (
-                        <div key={idx} className="p-4 rounded-xl bg-emerald-950/60 border border-emerald-800/40 space-y-1">
-                          <h4 className="text-sm font-bold text-white">{m.name}</h4>
-                          <span className="text-xs text-emerald-400 block">{m.position}</span>
-                          <span className="text-[11px] text-emerald-300/70 block">{m.expertise || m.office}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Optional District Coverage Table */}
-                {pageData.districtsList && (
-                  <div className="pt-6 border-t border-emerald-900/40 space-y-4">
-                    <h3 className="text-lg font-bold text-emerald-300">District Operational Breakup:</h3>
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-left text-xs border-collapse">
-                        <thead>
-                          <tr className="border-b border-emerald-800 text-emerald-300 bg-emerald-950">
-                            <th className="p-3">District</th>
-                            <th className="p-3">Upazilas Covered</th>
-                            <th className="p-3">Households Reached</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-emerald-900/40 text-emerald-200">
-                          {pageData.districtsList.map((d, idx) => (
-                            <tr key={idx} className="hover:bg-emerald-950/40">
-                              <td className="p-3 font-bold text-white">{d.name}</td>
-                              <td className="p-3">{d.upazilas}</td>
-                              <td className="p-3 font-mono text-emerald-400">{d.households}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
                     </div>
                   </div>
                 )}

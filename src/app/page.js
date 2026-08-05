@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import TopBar from '@/components/TopBar';
 import Navbar from '@/components/Navbar';
 import HeroSlider from '@/components/HeroSlider';
@@ -80,8 +81,14 @@ export default function Home() {
       {/* Development Partner Alliances & Modals */}
       <PartnersSection />
 
-      {/* Careers, Procurement Tenders & Official Notices */}
-      <CareerNoticeSection />
+      {/* Careers, Procurement Tenders & Official Notices wrapped in Suspense boundary for useSearchParams */}
+      <Suspense fallback={
+        <div className="py-20 text-center text-emerald-300 text-sm font-semibold">
+          Loading announcements & notices...
+        </div>
+      }>
+        <CareerNoticeSection />
+      </Suspense>
 
       {/* Contact Form & Office Locations */}
       <ContactSection />

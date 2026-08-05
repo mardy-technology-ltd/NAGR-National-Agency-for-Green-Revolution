@@ -6,6 +6,10 @@ import Footer from '@/components/Footer';
 import FloatingWhatsApp from '@/components/FloatingWhatsApp';
 import { whatWeDoSubpages } from '@/data/subpageData';
 
+export async function generateStaticParams() {
+  return Object.keys(whatWeDoSubpages).map((category) => ({ category }));
+}
+
 export async function generateMetadata({ params }) {
   const { category } = await params;
   const data = whatWeDoSubpages[category] || whatWeDoSubpages['tabitha-kindergarten-school'];
@@ -17,15 +21,16 @@ export async function generateMetadata({ params }) {
 
 export default async function WhatWeDoSubpage({ params }) {
   const { category } = await params;
-  const pageData = whatWeDoSubpages[category] || {
-    title: category.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
-    category: "Program Initiative",
-    subtitle: "Community development initiative operated by NAGR Bangladesh.",
-    image: "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1200",
-    content: [
-      "National Agency for Green Revolution (NAGR) works directly with community committees, school boards, and rural cooperatives to ensure long-term sustainability."
-    ]
-  };
+  const pageData = whatWeDoSubpages[category] || whatWeDoSubpages['tabitha-kindergarten-school'];
+
+  if (!pageData) {
+    return (
+      <main className="min-h-screen bg-[#070e08] text-emerald-50 py-20 text-center">
+        <h1 className="text-2xl font-bold">Program Not Found</h1>
+        <Link href="/what-we-do" className="text-emerald-400 underline mt-4 inline-block">Return to Programs</Link>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-[#070e08] text-emerald-50">
